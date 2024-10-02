@@ -1,0 +1,36 @@
+@startuml
+left to right direction
+'skinparam linetype ortho
+
+actor Aluno
+actor Professor
+actor Empresa
+
+rectangle "Sistema de Moeda Estudantil" {
+    usecase "Cadastrar" as us0
+    usecase "Distribuir Moedas" as us1
+    usecase "Consultar Extrato" as us2
+    usecase "Notificar Envio" as us3
+    usecase "Incluir Vantagem" as us4
+    usecase "Deletar Vantagem" as us5
+    usecase "Consultar Vantagens" as us6
+    usecase "Editar Vantagem" as us7
+    usecase "Resgatar Vantagem" as us8
+    usecase "Notificar Resgate" as us9
+
+}
+
+Aluno --> us0
+Empresa -l-> us0
+Professor --> us1
+us1 ..> us3 :<<includes>>
+Aluno --> us2
+Professor --> us2
+Empresa --> us4
+Empresa --> us5
+Empresa -l-> us6
+us6 ..> us7 : <<extends>>
+Aluno --> us8
+us8 ..> us9 : <<includes>>
+
+@enduml

@@ -1,0 +1,78 @@
+@startuml
+left to right direction
+skinparam linetype ortho
+
+abstract Usuário {
+    - nome String
+    - CPF String
+    - RG String
+    - email String
+    - saldoMoedas int
+    - transações ArrayList<Transação>
+    - instituição String
+}
+class Aluno {
+    - endereço String
+    - curso String
+
+    + consultarExtrato()
+    + resgatarVantagem()
+}
+class Professor{
+    - departamento String
+
+    +distribuirMoedas()
+    +consultarExtrato()
+}
+enum Instituição{
+    PUC MINAS
+    OUTRAS
+}
+class Empresa{
+    - nome String
+    - CNPJ String
+    - vantagens ArrayList<Vantagem>
+
+    + incluirVantagem()
+    + deletarVantagem()
+    + consultarVantagens()
+    + editarVantagem()
+}
+class Transação {
+    - data dateTime
+    - mensagem String
+    - qtdMoedas int
+    - aluno Aluno
+    - professor Professor
+}
+class TransaçãoProfessor {
+}
+class TransaçãoAluno {
+    - tipo String
+    - vantagem Vantagem
+}
+enum Tipo {
+    RECEBIMENTO
+    TROCA
+}
+class Vantagem {
+    - valor int
+    - empresa Empresa
+    - descrição String
+    - foto Imagem
+}
+
+'heranças'
+Aluno -u-|> Usuário
+Professor -l-|> Usuário
+TransaçãoProfessor --|> Transação
+TransaçãoAluno -l-|> Transação
+'enums'
+Usuário -l- Instituição :instituição
+TransaçãoAluno -u- Tipo :tipo
+'relações'
+Usuário o-u- Transação
+Empresa o-u- Vantagem
+TransaçãoAluno o-r- Vantagem
+
+@enduml
