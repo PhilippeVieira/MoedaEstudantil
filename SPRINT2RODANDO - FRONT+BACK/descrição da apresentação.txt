@@ -1,0 +1,27 @@
+Backend (Spring Boot + JPA)
+Frontent - (POSTMAN)
+-------------------------------
+
+Definição da Estratégia de Acesso ao Banco de Dados
+
+Para o projeto, a estratégia de acesso ao banco de dados implementada foi o  uso do Spring Data JPA junto com o PostgreSQL. A abordagem é baseada no seguinte:
+
+Spring Data JPA: Um framework que abstrai a complexidade do acesso ao banco de dados usando a API Java Persistence (JPA). Ele facilita a criação de repositórios para manipulação de entidades e o mapeamento objeto-relacional (ORM).
+
+PostgreSQL: O banco de dados escolhido para persistir os dados, utilizando a linguagem SQL. É um sistema de gerenciamento de banco de dados relacional altamente escalável e confiável.
+
+2. Ferramentas e Tecnologias Utilizadas pelo grupo
+
+As principais ferramentas e tecnologias envolvidas na implementação do acesso ao banco de dados são:
+
+JPA (Java Persistence API): Usada para mapeamento objeto-relacional (ORM), convertendo objetos Java em registros do banco de dados.
+
+Hibernate: Implementação de JPA, que facilita o gerenciamento de transações e o mapeamento objeto-relacional.
+
+Spring Data JPA: Simplifica o uso do JPA com repositórios, eliminando a necessidade de escrever consultas SQL complexas.
+
+PostgreSQL: O banco de dados relacional onde as entidades persistem os dados.
+
+---------------------------------------------------
+
+E ao final, para visualizar tudo funcionando corretamente e, atendendo ao que foi pedido pelo professor(frontend) foi utilizado o postman para realizar, GET, PUT, DELET, POST
