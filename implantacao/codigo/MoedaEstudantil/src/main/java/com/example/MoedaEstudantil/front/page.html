@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Moeda Estudantil</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#" onclick="showPage('home')">Moeda Estudantil</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showPage('aluno')">Aluno</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showPage('empresa')">Empresa Parceira</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div id="home" class="text-center">
+            <h1>Moeda Estudantil</h1>
+            <p>Bem-vindo ao sistema Moeda Estudantil.</p>
+            <p>Bem-vindos à página inicial do nosso projeto.</p>
+        </div>
+
+        <div id="aluno" style="display: none;">
+            <h2>CRUD - Aluno</h2>
+            <button class="btn btn-secondary mb-3" onclick="showPage('home')">Voltar</button>
+            <form id="alunoForm">
+                <input type="hidden" id="alunoId">
+                <div class="form-group">
+                    <label for="alunoNome">Nome</label>
+                    <input type="text" class="form-control" id="alunoNome" placeholder="Digite o nome do aluno">
+                </div>
+                <div class="form-group">
+                    <label for="alunoCpf">CPF</label>
+                    <input type="text" class="form-control" id="alunoCpf" placeholder="Digite o CPF do aluno">
+                </div>
+                <div class="form-group">
+                    <label for="alunoRg">RG</label>
+                    <input type="text" class="form-control" id="alunoRg" placeholder="Digite o RG do aluno">
+                </div>
+                <div class="form-group">
+                    <label for="alunoEmail">Email</label>
+                    <input type="email" class="form-control" id="alunoEmail" placeholder="Digite o email do aluno">
+                </div>
+                <div class="form-group">
+                    <label for="alunoInstituicao">Instituição</label>
+                    <input type="text" class="form-control" id="alunoInstituicao" placeholder="Digite a instituição do aluno">
+                </div>
+                <div class="form-group">
+                    <label for="alunoEndereco">Endereço</label>
+                    <input type="text" class="form-control" id="alunoEndereco" placeholder="Digite o endereço do aluno">
+                </div>
+                <div class="form-group">
+                    <label for="alunoCurso">Curso</label>
+                    <input type="text" class="form-control" id="alunoCurso" placeholder="Digite o curso do aluno">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="saveAluno()">Salvar Aluno</button>
+            </form>
+            <h3 class="mt-4">Lista de Alunos</h3>
+            <ul id="alunoList" class="list-group"></ul>
+        </div>
+
+        <div id="empresa" style="display: none;">
+            <h2>CRUD - Empresa Parceira</h2>
+            <button class="btn btn-secondary mb-3" onclick="showPage('home')">Voltar</button>
+            <form id="empresaForm">
+                <input type="hidden" id="empresaId">
+                <div class="form-group">
+                    <label for="empresaNome">Nome da Empresa</label>
+                    <input type="text" class="form-control" id="empresaNome" placeholder="Digite o nome da empresa">
+                </div>
+                <div class="form-group">
+                    <label for="empresaCnpj">CNPJ</label>
+                    <input type="text" class="form-control" id="empresaCnpj" placeholder="Digite o CNPJ da empresa">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="saveEmpresa()">Salvar Empresa</button>
+            </form>
+            <h3 class="mt-4">Lista de Empresas Parceiras</h3>
+            <ul id="empresaList" class="list-group"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function showPage(page) {
+                document.getElementById('home').style.display = 'none';
+                document.getElementById('aluno').style.display = 'none';
+                document.getElementById('empresa').style.display = 'none';
+
+                document.getElementById(page).style.display = 'block';
+                if (page === 'aluno') {
+                    loadAlunos();
+                } else if (page === 'empresa') {
+                    loadEmpresas();
+                }
+            }
+
+            async function saveAluno() {
+                const id = document.getElementById('alunoId').value;
+                const nome = document.getElementById('alunoNome').value;
+                const cpf = document.getElementById('alunoCpf').value;
+                const rg = document.getElementById('alunoRg').value;
+                const email = document.getElementById('alunoEmail').value;
+                const instituicao = document.getElementById('alunoInstituicao').value;
+                const endereco = document.getElementById('alunoEndereco').value;
+                const curso = document.getElementById('alunoCurso').value;
+                if (nome) {
+                    const aluno = { nome, cpf, rg, email, instituicao, endereco, curso };
+                    try {
+                        let response;
+                        if (id) {
+                            response = await fetch(`http://localhost:8080/alunos/${id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(aluno)
+                            });
+                        } else {
+                            response = await fetch('http://localhost:8080/alunos', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(aluno)
+                            });
+                        }
+                        if (response.ok) {
+                            document.getElementById('alunoForm').reset();
+                            document.getElementById('alunoId').value = '';
+                            loadAlunos();
+                        }
+                    } catch (error) {
+                        console.error('Erro ao salvar aluno:', error);
+                    }
+                }
+            }
+
+            async function loadAlunos() {
+                try {
+                    const response = await fetch('http://localhost:8080/alunos');
+                    if (response.ok) {
+                        const alunos = await response.json();
+                        const alunoList = document.getElementById('alunoList');
+                        alunoList.innerHTML = '';
+                        alunos.forEach(aluno => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item';
+                            li.innerHTML = `${aluno.nome} - ${aluno.cpf} - ${aluno.email} 
+                                <button class="btn btn-warning btn-sm float-right ml-2" onclick="editAluno(${aluno.id})">Editar</button>
+                                <button class="btn btn-danger btn-sm float-right" onclick="deleteAluno(${aluno.id}, this)">Remover</button>`;
+                            alunoList.appendChild(li);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar alunos:', error);
+                }
+            }
+
+            function editAluno(id) {
+                fetch(`http://localhost:8080/alunos/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro ao buscar aluno para edição');
+                        }
+                        return response.json();
+                    })
+                    .then(aluno => {
+                        document.getElementById('alunoId').value = aluno.id;
+                        document.getElementById('alunoNome').value = aluno.nome || '';
+                        document.getElementById('alunoCpf').value = aluno.cpf || '';
+                        document.getElementById('alunoRg').value = aluno.rg || '';
+                        document.getElementById('alunoEmail').value = aluno.email || '';
+                        document.getElementById('alunoInstituicao').value = aluno.instituicao || '';
+                        document.getElementById('alunoEndereco').value = aluno.endereco || '';
+                        document.getElementById('alunoCurso').value = aluno.curso || '';
+                    })
+                    .catch(error => console.error('Erro ao editar aluno:', error));
+            }
+
+            async function deleteAluno(id, element) {
+                try {
+                    const response = await fetch(`http://localhost:8080/alunos/${id}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        element.parentElement.remove();
+                    }
+                } catch (error) {
+                    console.error('Erro ao remover aluno:', error);
+                }
+            }
+
+            async function saveEmpresa() {
+                const id = document.getElementById('empresaId').value;
+                const nome = document.getElementById('empresaNome').value;
+                const cnpj = document.getElementById('empresaCnpj').value;
+                if (nome && cnpj) {
+                    const empresa = { nome, cnpj };
+                    try {
+                        let response;
+                        if (id) {
+                            response = await fetch(`http://localhost:8080/empresas/${id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(empresa)
+                            });
+                        } else {
+                            response = await fetch('http://localhost:8080/empresas', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(empresa)
+                            });
+                        }
+                        if (response.ok) {
+                            document.getElementById('empresaForm').reset();
+                            document.getElementById('empresaId').value = '';
+                            loadEmpresas();
+                        }
+                    } catch (error) {
+                        console.error('Erro ao salvar empresa:', error);
+                    }
+                }
+            }
+
+            async function loadEmpresas() {
+                try {
+                    const response = await fetch('http://localhost:8080/empresas');
+                    if (response.ok) {
+                        const empresas = await response.json();
+                        const empresaList = document.getElementById('empresaList');
+                        empresaList.innerHTML = '';
+                        empresas.forEach(empresa => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item';
+                            li.innerHTML = `${empresa.nome} - CNPJ: ${empresa.cnpj} 
+                                <button class="btn btn-warning btn-sm float-right ml-2" onclick="editEmpresa(${empresa.id})">Editar</button>
+                                <button class="btn btn-danger btn-sm float-right" onclick="deleteEmpresa(${empresa.id}, this)">Remover</button>`;
+                            empresaList.appendChild(li);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar empresas:', error);
+                }
+            }
+
+            function editEmpresa(id) {
+                fetch(`http://localhost:8080/empresas/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro ao buscar empresa para edição');
+                        }
+                        return response.json();
+                    })
+                    .then(empresa => {
+                        document.getElementById('empresaId').value = empresa.id;
+                        document.getElementById('empresaNome').value = empresa.nome || '';
+                        document.getElementById('empresaCnpj').value = empresa.cnpj || '';
+                    })
+                    .catch(error => console.error('Erro ao editar empresa:', error));
+            }
+
+            async function deleteEmpresa(id, element) {
+                try {
+                    const response = await fetch(`http://localhost:8080/empresas/${id}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        element.parentElement.remove();
+                    }
+                } catch (error) {
+                    console.error('Erro ao remover empresa:', error);
+                }
+            }
+
+            // Expose functions globally
+            window.showPage = showPage;
+            window.saveAluno = saveAluno;
+            window.editAluno = editAluno;
+            window.deleteAluno = deleteAluno;
+            window.saveEmpresa = saveEmpresa;
+            window.editEmpresa = editEmpresa;
+            window.deleteEmpresa = deleteEmpresa;
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

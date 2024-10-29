@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/alunos")
+@CrossOrigin(origins = "*") // Permite requisições de qualquer origem
 public class AlunoController {
     private final AlunoRepository alunoRepository;
 
