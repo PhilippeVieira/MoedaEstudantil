@@ -3,10 +3,15 @@ package com.example.MoedaEstudantil.Entities;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter@Setter
 @Entity
 public class Empresa {
+    // Getters e Setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,36 +21,4 @@ public class Empresa {
     @OneToMany(mappedBy = "empresa")
     private List<Vantagem> vantagens;
 
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public List<Vantagem> getVantagens() {
-        return vantagens;
-    }
-
-    public void setVantagens(List<Vantagem> vantagens) {
-        this.vantagens = vantagens;
-    }
 }

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="button" onclick="function validarLogin() {}">Login</button>
+        </form>
+        <a href="page.html"> Voltar </a>
+        <p id="error" class="error-message"></p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function validarLogin() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const errorMessage = document.getElementById('error');
+                if (username === '' || password === '') {
+                    errorMessage.textContent = 'Preencha todos os campos.';
+                } else {
+                    errorMessage.textContent = ''; // Clear error message
+                    const login = {username, password};
+                    try {
+                        let response = fetch(`http://localhost:8080/login`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(login)
+                        });
+                        if (response.ok) {
+                            document.getElementById('loginForm').reset();
+                            alert('Login realizado');
+                        }else{
+                            errorMessage.textContent = 'Verifique os informações do login e tente novamente.';
+                        }
+                    } catch (error) {
+                        console.error('Erro ao validar o login:', error);
+                        alert('Verifique os informações do login e tente novamente.');
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
