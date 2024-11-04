@@ -5,18 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Moeda Estudantil</title>
-    <style>
-        .nav-link{
-            border-right: solid 1px dimgray;
-        }
-        .navbar-nav:first-child{
-            border-left: solid 1px dimgray;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#" onclick="showPage('home')"> Moeda Estudantil </a>
+        <a class="navbar-brand" href="#" onclick="showPage('home')">Moeda Estudantil</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -29,10 +21,13 @@
                     <a class="nav-link" href="#" onclick="showPage('empresa')">Empresa Parceira</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showPage('envioMoedas')"> Enviar Moedas </a>
+                    <a class="nav-link" href="#" onclick="showPage('professor')">Professor</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="showPage('extrato')"> Consultar Extrato </a>
+                    <a class="nav-link" href="#" onclick="showPage('transacao')">Enviar Moedas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showPage('saldo')">Verificar Saldo</a>
                 </li>
             </ul>
         </div>
@@ -42,9 +37,8 @@
         <div id="home" class="text-center">
             <h1>Moeda Estudantil</h1>
             <p>Bem-vindo ao sistema Moeda Estudantil.</p>
-            <p>Bem-vindos à página inicial do nosso projeto.</p>
         </div>
-<!--- PÁGINA CADASTRO DE ALUNO --->
+
         <div id="aluno" style="display: none;">
             <h2>CRUD - Aluno</h2>
             <button class="btn btn-secondary mb-3" onclick="showPage('home')">Voltar</button>
@@ -83,7 +77,7 @@
             <h3 class="mt-4">Lista de Alunos</h3>
             <ul id="alunoList" class="list-group"></ul>
         </div>
-<!--- PÁGINA CADASTRO DE EMPRESA PARCEIRA --->
+
         <div id="empresa" style="display: none;">
             <h2>CRUD - Empresa Parceira</h2>
             <button class="btn btn-secondary mb-3" onclick="showPage('home')">Voltar</button>
@@ -102,72 +96,286 @@
             <h3 class="mt-4">Lista de Empresas Parceiras</h3>
             <ul id="empresaList" class="list-group"></ul>
         </div>
-<!--- PÁGINA ENVIO DE MOEDAS PELO PROFESSOR --->
-        <div id="envioMoedas" style="display: none;">
-            <h2>Envio de moedas</h2>
+
+        <div id="professor" style="display: none;">
+            <h2>CRUD - Professor</h2>
             <button class="btn btn-secondary mb-3" onclick="showPage('home')">Voltar</button>
-            <form id="envioForm">
-                <input type="hidden" id="envioId">
+            <form id="professorForm">
+                <input type="hidden" id="professorId">
                 <div class="form-group">
-                    <label for="professorId">ID do professor</label>
-                    <input type="text" class="form-control" id="professorId" placeholder="Digite o ID do professor que realizará o envio">
+                    <label for="professorNome">Nome do Professor</label>
+                    <input type="text" class="form-control" id="professorNome" placeholder="Digite o nome do professor">
                 </div>
                 <div class="form-group">
-                    <label for="alunoIdSend">ID do Aluno</label>
-                    <input type="text" class="form-control" id="alunoIdSend" placeholder="Digite o ID do aluno que receberá as moedas">
+                    <label for="professorInstituicao">Instituição</label>
+                    <input type="text" class="form-control" id="professorInstituicao" placeholder="Digite a instituição do professor">
                 </div>
-                <div class="form-group">
-                    <label for="quantMoedas">Valor em Moedas</label>
-                    <input type="number" class="form-control" id="quantMoedas" placeholder="Digite o valor de moedas a serem enviadas">
-                </div>
-                <div class="form-group">
-                    <label for="mensagem">Mensagem</label>
-                    <input type="text" class="form-control" id="mensagem" placeholder="Digite o uma mensagem para o envio">
-                </div>
-                <button type="button" class="btn btn-primary" onclick="sendMoedas()">Confirmar Transação</button>
+                <button type="button" class="btn btn-primary" onclick="saveProfessor()">Salvar Professor</button>
             </form>
-            <h3 class="mt-4">Transações realisadas</h3>
-            <div  id="envioList" class="accordion"></div>
-            </div>
-<!--- PÁGINA CONSULTA DO EXTRATO DO ALUNO --->
-        <div id="extrato" style="display: none;">
-            <h2>Extrato do Aluno</h2>
+            <h3 class="mt-4">Lista de Professores</h3>
+            <ul id="professorList" class="list-group"></ul>
+        </div>
+
+        <div id="transacao" style="display: none;">
+            <h2>Enviar Moedas</h2>
             <button class="btn btn-secondary mb-3" onclick="showPage('home')">Voltar</button>
-            <h3 class="mt-4">Transações Recebidas</h3>
-            <div  id="extratoList" class="accordion"></div>
+            <form id="transacaoForm">
+                <div class="form-group">
+                    <label for="origem">Remetente (ID do Aluno/Professor)</label>
+                    <input type="text" class="form-control" id="origem" placeholder="Digite o ID do remetente">
+                </div>
+                <div class="form-group">
+                    <label for="destino">Destinatário (ID do Aluno/Professor)</label>
+                    <input type="text" class="form-control" id="destino" placeholder="Digite o ID do destinatário">
+                </div>
+                <div class="form-group">
+                    <label for="quantidade">Quantidade de Moedas</label>
+                    <input type="number" class="form-control" id="quantidade" placeholder="Digite a quantidade de moedas">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="enviarMoedas()">Enviar Moedas</button>
+            </form>
+            <h3 class="mt-4">Histórico de Transações</h3>
+            <ul id="transacaoList" class="list-group"></ul>
+        </div>
+
+        <div id="saldo" style="display: none;">
+            <h2>Verificar Saldo</h2>
+            <button class="btn btn-secondary mb-3" onclick="showPage('home')">Voltar</button>
+            <form id="saldoForm">
+                <div class="form-group">
+                    <label for="usuarioIdSaldo">ID do Usuário (Aluno/Professor)</label>
+                    <input type="text" class="form-control" id="usuarioIdSaldo" placeholder="Digite o ID do usuário">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="verificarSaldo()">Verificar Saldo</button>
+            </form>
+            <h3 class="mt-4" id="saldoDisplay"></h3>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function showPage(page) {
-                document.getElementById('home').style.display = 'none';
-                document.getElementById('aluno').style.display = 'none';
-                document.getElementById('empresa').style.display = 'none';
-                document.getElementById('extrato').style.display = 'none';
-                document.getElementById('envioMoedas').style.display = 'none';
+        let saldos = {};
 
-                document.getElementById(page).style.display = 'block';
-                if (page === 'aluno') {
-                    loadAlunos();
-                } else if (page === 'empresa') {
-                    loadEmpresas();
-                } else if (page === 'extrato') {
-                    loadExtrato();
+        function showPage(page) {
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('aluno').style.display = 'none';
+            document.getElementById('empresa').style.display = 'none';
+            document.getElementById('professor').style.display = 'none';
+            document.getElementById('transacao').style.display = 'none';
+            document.getElementById('saldo').style.display = 'none';
+
+            document.getElementById(page).style.display = 'block';
+            if (page === 'aluno') {
+                loadAlunos();
+            } else if (page === 'empresa') {
+                loadEmpresas();
+            } else if (page === 'professor') {
+                loadProfessores();
+            }
+        }
+
+        async function saveProfessor() {
+            const id = document.getElementById('professorId').value;
+            const nome = document.getElementById('professorNome').value;
+            const instituicao = document.getElementById('professorInstituicao').value;
+            if (nome && instituicao) {
+                const professor = { id: id || new Date().getTime(), nome, instituicao };
+                const professorList = document.getElementById('professorList');
+
+                if (id) {
+                    const existingProfessor = document.querySelector(`#professorList li[data-id='${id}']`);
+                    if (existingProfessor) {
+                        existingProfessor.innerHTML = `${professor.nome} - ${professor.instituicao} 
+                            <button class="btn btn-warning btn-sm float-right ml-2" onclick="editProfessor(${professor.id})">Editar</button>
+                            <button class="btn btn-danger btn-sm float-right" onclick="deleteProfessor(${professor.id}, this)">Remover</button>`;
+                    }
+                } else {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.setAttribute('data-id', professor.id);
+                    li.innerHTML = `${professor.nome} - ${professor.instituicao} 
+                        <button class="btn btn-warning btn-sm float-right ml-2" onclick="editProfessor(${professor.id})">Editar</button>
+                        <button class="btn btn-danger btn-sm float-right" onclick="deleteProfessor(${professor.id}, this)">Remover</button>`;
+                    professorList.appendChild(li);
+                }
+                document.getElementById('professorForm').reset();
+                document.getElementById('professorId').value = '';
+                if (!saldos[professor.id]) {
+                    saldos[professor.id] = 0;
                 }
             }
+        }
 
-            // Expose functions globally
-            window.showPage = showPage;
-            window.saveAluno = saveAluno;
-            window.editAluno = editAluno;
-            window.deleteAluno = deleteAluno;
-            window.saveEmpresa = saveEmpresa;
-            window.editEmpresa = editEmpresa;
-            window.deleteEmpresa = deleteEmpresa;
-        });
+        function editProfessor(id) {
+            const professor = document.querySelector(`#professorList li[data-id='${id}']`);
+            if (professor) {
+                const [nome, instituicao] = professor.textContent.split(' - ');
+                document.getElementById('professorId').value = id;
+                document.getElementById('professorNome').value = nome.trim();
+                document.getElementById('professorInstituicao').value = instituicao.trim();
+            }
+        }
+
+        function deleteProfessor(id, element) {
+            const professor = document.querySelector(`#professorList li[data-id='${id}']`);
+            if (professor) {
+                professor.remove();
+                delete saldos[id];
+            }
+        }
+
+        function enviarMoedas() {
+            const origem = document.getElementById('origem').value;
+            const destino = document.getElementById('destino').value;
+            const quantidade = parseInt(document.getElementById('quantidade').value);
+            if (origem && destino && quantidade > 0) {
+                if (!saldos[origem]) {
+                    saldos[origem] = 0;
+                }
+                if (!saldos[destino]) {
+                    saldos[destino] = 0;
+                }
+
+                if (saldos[origem] >= quantidade) {
+                    saldos[origem] -= quantidade;
+                    saldos[destino] += quantidade;
+
+                    const transacaoList = document.getElementById('transacaoList');
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.innerHTML = `Remetente: ${origem} - Destinatário: ${destino} - Quantidade: ${quantidade} moedas`;
+                    transacaoList.appendChild(li);
+                    document.getElementById('transacaoForm').reset();
+                } else {
+                    alert('Saldo insuficiente para realizar a transação.');
+                }
+            }
+        }
+
+        function verificarSaldo() {
+            const usuarioId = document.getElementById('usuarioIdSaldo').value;
+            if (usuarioId && saldos[usuarioId] !== undefined) {
+                document.getElementById('saldoDisplay').innerText = `Saldo do Usuário ${usuarioId}: ${saldos[usuarioId]} moedas`;
+            } else {
+                document.getElementById('saldoDisplay').innerText = 'Usuário não encontrado ou saldo indisponível.';
+            }
+        }
+
+        async function saveAluno() {
+            const id = document.getElementById('alunoId').value;
+            const nome = document.getElementById('alunoNome').value;
+            const cpf = document.getElementById('alunoCpf').value;
+            const rg = document.getElementById('alunoRg').value;
+            const email = document.getElementById('alunoEmail').value;
+            const instituicao = document.getElementById('alunoInstituicao').value;
+            const endereco = document.getElementById('alunoEndereco').value;
+            const curso = document.getElementById('alunoCurso').value;
+            if (nome) {
+                const aluno = { id: id || new Date().getTime(), nome, cpf, rg, email, instituicao, endereco, curso };
+                const alunoList = document.getElementById('alunoList');
+
+                if (id) {
+                    const existingAluno = document.querySelector(`#alunoList li[data-id='${id}']`);
+                    if (existingAluno) {
+                        existingAluno.innerHTML = `${aluno.nome} - ${aluno.cpf} - ${aluno.email} 
+                            <button class="btn btn-warning btn-sm float-right ml-2" onclick="editAluno(${aluno.id})">Editar</button>
+                            <button class="btn btn-danger btn-sm float-right" onclick="deleteAluno(${aluno.id}, this)">Remover</button>`;
+                    }
+                } else {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.setAttribute('data-id', aluno.id);
+                    li.innerHTML = `${aluno.nome} - ${aluno.cpf} - ${aluno.email} 
+                        <button class="btn btn-warning btn-sm float-right ml-2" onclick="editAluno(${aluno.id})">Editar</button>
+                        <button class="btn btn-danger btn-sm float-right" onclick="deleteAluno(${aluno.id}, this)">Remover</button>`;
+                    alunoList.appendChild(li);
+                }
+                document.getElementById('alunoForm').reset();
+                document.getElementById('alunoId').value = '';
+                if (!saldos[aluno.id]) {
+                    saldos[aluno.id] = 0;
+                }
+            }
+        }
+
+        function editAluno(id) {
+            const aluno = document.querySelector(`#alunoList li[data-id='${id}']`);
+            if (aluno) {
+                const [nome, cpf, email] = aluno.textContent.split(' - ');
+                document.getElementById('alunoId').value = id;
+                document.getElementById('alunoNome').value = nome.trim();
+                document.getElementById('alunoCpf').value = cpf.trim();
+                document.getElementById('alunoEmail').value = email.trim();
+            }
+        }
+
+        function deleteAluno(id, element) {
+            const aluno = document.querySelector(`#alunoList li[data-id='${id}']`);
+            if (aluno) {
+                aluno.remove();
+                delete saldos[id];
+            }
+        }
+
+        async function saveEmpresa() {
+            const id = document.getElementById('empresaId').value;
+            const nome = document.getElementById('empresaNome').value;
+            const cnpj = document.getElementById('empresaCnpj').value;
+            if (nome && cnpj) {
+                const empresa = { id: id || new Date().getTime(), nome, cnpj };
+                const empresaList = document.getElementById('empresaList');
+
+                if (id) {
+                    const existingEmpresa = document.querySelector(`#empresaList li[data-id='${id}']`);
+                    if (existingEmpresa) {
+                        existingEmpresa.innerHTML = `${empresa.nome} - CNPJ: ${empresa.cnpj} 
+                            <button class="btn btn-warning btn-sm float-right ml-2" onclick="editEmpresa(${empresa.id})">Editar</button>
+                            <button class="btn btn-danger btn-sm float-right" onclick="deleteEmpresa(${empresa.id}, this)">Remover</button>`;
+                    }
+                } else {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.setAttribute('data-id', empresa.id);
+                    li.innerHTML = `${empresa.nome} - CNPJ: ${empresa.cnpj} 
+                        <button class="btn btn-warning btn-sm float-right ml-2" onclick="editEmpresa(${empresa.id})">Editar</button>
+                        <button class="btn btn-danger btn-sm float-right" onclick="deleteEmpresa(${empresa.id}, this)">Remover</button>`;
+                    empresaList.appendChild(li);
+                }
+                document.getElementById('empresaForm').reset();
+                document.getElementById('empresaId').value = '';
+            }
+        }
+
+        function editEmpresa(id) {
+            const empresa = document.querySelector(`#empresaList li[data-id='${id}']`);
+            if (empresa) {
+                const [nome, cnpj] = empresa.textContent.split(' - CNPJ: ');
+                document.getElementById('empresaId').value = id;
+                document.getElementById('empresaNome').value = nome.trim();
+                document.getElementById('empresaCnpj').value = cnpj.trim();
+            }
+        }
+
+        function deleteEmpresa(id, element) {
+            const empresa = document.querySelector(`#empresaList li[data-id='${id}']`);
+            if (empresa) {
+                empresa.remove();
+            }
+        }
+
+        // Expose functions globally
+        window.showPage = showPage;
+        window.saveProfessor = saveProfessor;
+        window.editProfessor = editProfessor;
+        window.deleteProfessor = deleteProfessor;
+        window.enviarMoedas = enviarMoedas;
+        window.verificarSaldo = verificarSaldo;
+        window.saveAluno = saveAluno;
+        window.editAluno = editAluno;
+        window.deleteAluno = deleteAluno;
+        window.saveEmpresa = saveEmpresa;
+        window.editEmpresa = editEmpresa;
+        window.deleteEmpresa = deleteEmpresa;
     </script>
-    <script src="scripts/*"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
