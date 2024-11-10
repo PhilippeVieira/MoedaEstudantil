@@ -1,7 +1,6 @@
 package com.example.MoedaEstudantil.Entities;
 
-
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +12,7 @@ public class Vantagem {
     private int valor;
 
     @ManyToOne
+    @JsonIgnore // Evita a serialização da empresa na vantagem, eliminando ciclos de referência
     private Empresa empresa;
 
     // Getters e Setters
