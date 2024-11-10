@@ -1,11 +1,106 @@
 @startuml
-'https://plantuml.com/sequence-diagram
 
+actor Empresa as empresa #lightgrey
+participant "Class Vantagem" as vantagemCL #lightgrey
+database "Vantagem DB" as vantagemDB #lightgrey
+
+hnote over empresa : logou na aplicação
+
+' Criar uma vantagem
 autonumber
+activate empresa  #lightgrey
+group while [validaDados = false]
+    empresa -> vantagemCL : newVantagem (dados);
+    activate vantagemCL  #lightgrey
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+    vantagemCL -> vantagemCL : validaDado();
+    alt validaDado = false
+        vantagemCL -> empresa : alert("Dados vão válidos");
+    end
+end
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+vantagemCL -> vantagemDB : findMatch();
+activate vantagemDB  #lightgrey
+vantagemDB -> vantagemCL : response
+deactivate vantagemDB
+
+alt findMatch = true
+   vantagemCL -> empresa :alert ("Vantagem já está cadastrada"); activate vantagemCL
+else
+    vantagemCL -> vantagemDB : createNovo(dados);
+    activate vantagemDB  #lightgrey
+    vantagemDB -> vantagemCL : message("itemCriado");
+    deactivate vantagemDB
+    vantagemCL -> empresa :alert ("Vantagem cadastrada com Sucesso");
+    deactivate vantagemCL
+end
+hnote over empresa : idle
+...
+
+' Listar as vantagens
+autonumber
+empresa -> vantagemCL : listVantagens();
+activate vantagemCL  #lightgrey
+
+vantagemCL -> vantagemDB : getAll();
+activate vantagemDB  #lightgrey
+vantagemDB -> vantagemCL : response
+deactivate vantagemDB
+
+alt getAll = null
+   vantagemCL -> empresa :alert ("Ainda não existem vantagens cadastradas");
+else
+    vantagemCL -> empresa : listaVantagens[];
+    deactivate vantagemCL
+end
+hnote over empresa : idle
+...
+
+' Editar uma vantagem
+autonumber
+empresa -> vantagemCL : editVantagem (item, novosDados);
+activate vantagemCL  #lightgrey
+
+vantagemCL -> vantagemDB : findMatch();
+activate vantagemDB  #lightgrey
+vantagemDB -> vantagemCL : response
+deactivate vantagemDB
+
+alt findMatch = false
+   vantagemCL -> empresa :alert ("Vantagem não encontrada no banco de dados");
+else
+    vantagemCL -> vantagemDB : alterItem(item, novosDados);
+    activate vantagemDB  #lightgrey
+    vantagemDB -> vantagemCL : message("itemAlterado");
+    deactivate vantagemDB
+    vantagemCL -> empresa :alert ("Alterações realisadas para a vantagem");
+    deactivate vantagemCL
+end
+hnote over empresa : idle
+...
+
+' Deletar uma vantagem
+autonumber
+empresa -> vantagemCL : deleteVantagem (item);
+activate vantagemCL  #lightgrey
+
+vantagemCL -> vantagemDB : findMatch();
+activate vantagemDB  #lightgrey
+vantagemDB -> vantagemCL : response
+deactivate vantagemDB
+
+alt findMatch = false
+   vantagemCL -> empresa :alert ("Vantagem não encontrada no banco de dados");
+else
+    vantagemCL -> vantagemDB : deleteItem(item);
+    activate vantagemDB  #lightgrey
+    vantagemDB -> vantagemCL : message("itemDeletado");
+    deactivate vantagemDB
+    vantagemCL -> empresa :alert ("Vantagem excluida com sucesso");
+    deactivate vantagemCL
+end
+
+hnote over empresa : encerrou a aplicação
+deactivate empresa
+
 @enduml
