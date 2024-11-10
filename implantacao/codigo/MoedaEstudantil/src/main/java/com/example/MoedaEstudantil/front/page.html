@@ -6,12 +6,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Moeda Estudantil</title>
     <style>
-        .nav-link{
-            border-right: solid 1px dimgray;
+        @media (min-width: 992px) {
+            .nav-link{
+                border-right: solid 1px dimgray;
+            }
+            .navbar-nav:first-child{
+                border-left: solid 1px dimgray;
+            }
         }
-        .navbar-nav:first-child{
-            border-left: solid 1px dimgray;
+        @media (max-width: 991px) {
+            .nav-link{
+                border-bottom: solid 1px dimgray;
+            }
         }
+
     </style>
 </head>
 <body>
@@ -39,6 +47,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onclick="showPage('extrato')"> Consultar Extrato </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showPage('vantagem')"> Vantagens </a>
                 </li>
             </ul>
         </div>
@@ -173,14 +184,33 @@
             <h3 class="mt-4">Transações Recebidas</h3>
             <ul id="extratoList" class="list-group"></ul>
         </div>
+
+        <div id="vantagem" class ="page" style="display: none;">
+            <h2>CRUD - Vantagens Empresa</h2>
+            <button class="btn btn-secondary mb-3" onclick="showPage('home')">Voltar</button>
+            <form id="vantagemForm">
+                <input type="hidden" id="vantagemId">
+                <div class="form-group">
+                    <label for="vantagemDescricao">Descrição</label>
+                    <input type="text" class="form-control" id="vantagemDescricao" placeholder="Digite uma descrição para a vantagem">
+                </div>
+                <div class="form-group">
+                    <label for="vantagemValor">Valor</label>
+                    <input type="number" class="form-control" id="vantagemValor" placeholder="Defina um valor para a vantagem (em M$)">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="saveVantagem()">Salvar Vantagem</button>
+            </form>
+            <h3 class="mt-4">Lista de Vantagens</h3>
+            <ul id="vantagemList" class="list-group"></ul>
+        </div>
     </div>
 
     <script>
         let saldos = {};
 
         function showPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById(page).style.display = 'block';
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none'); // Esconde todas as páginas
+            document.getElementById(page).style.display = 'block'; // Mostra somente a página desejada
             if (page === 'aluno') {
                 loadAlunos();
             } else if (page === 'empresa') {
@@ -188,11 +218,6 @@
             } else if (page === 'professor') {
                 loadProfessores();
             } else if (page === 'envioMoedas') {
-                /*
-                setTimeout(function() {
-                    loadExtrato('envioMoedas', 'envioList');
-                }, 100);
-                */
                 loadExtrato('envioMoedas', 'envioList');
             }
         }
@@ -211,6 +236,10 @@
         window.enviarMoedas = enviarMoedas;
         window.verificarSaldo = verificarSaldo;
         window.loadExtrato = loadExtrato;
+        window.saveVantagem = saveVantagem;
+        window.deleteVantagem = deleteVantagem;
+        window.editVantagem = editVantagem;
+
     </script>
     <script src="scripts/extrato.js"></script>
     <script src="scripts/empresa.js"></script>
@@ -218,6 +247,7 @@
     <script src="scripts/enviarMoedas.js"></script>
     <script src="scripts/saldo.js"></script>
     <script src="scripts/professor.js"></script>
+    <script src="scripts/vantagem.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
