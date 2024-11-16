@@ -8,11 +8,18 @@ public class Vantagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String descricao;
+
     private int valor;
 
     @ManyToOne
-    @JsonIgnore // Evita a serialização da empresa na vantagem, eliminando ciclos de referência
+    @JsonIgnore // Evita ciclos de referência na serialização JSON
+    @JoinColumn(name = "aluno_id") // Define a chave estrangeira para a relação com Aluno
+    private Aluno aluno;
+
+    @ManyToOne
+    @JsonIgnore // Evita ciclos de referência na serialização JSON
     private Empresa empresa;
 
     // Getters e Setters
@@ -46,5 +53,13 @@ public class Vantagem {
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public Aluno getAluno() {
+        return aluno;
+    }
+
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
     }
 }
