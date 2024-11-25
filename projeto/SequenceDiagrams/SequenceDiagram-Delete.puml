@@ -1,0 +1,30 @@
+@startuml
+
+actor Empresa as empresa #lightgrey
+participant "Class Vantagem" as vantagemCL #lightgrey
+database "Vantagem DB" as vantagemDB #lightgrey
+
+' Deletar uma vantagem
+autonumber
+activate empresa
+empresa -> vantagemCL : deleteVantagem (item);
+activate vantagemCL  #lightgrey
+
+vantagemCL -> vantagemDB : findMatch();
+activate vantagemDB  #lightgrey
+vantagemDB -> vantagemCL : response
+deactivate vantagemDB
+
+alt findMatch = false
+   vantagemCL -> empresa :alert ("Vantagem não encontrada no banco de dados");
+else
+    vantagemCL -> vantagemDB : deleteItem(item);
+    activate vantagemDB  #lightgrey
+    vantagemDB -> vantagemCL : message("itemDeletado");
+    deactivate vantagemDB
+    vantagemCL -> empresa :alert ("Vantagem excluida com sucesso");
+    deactivate vantagemCL
+end
+deactivate empresa
+
+@enduml

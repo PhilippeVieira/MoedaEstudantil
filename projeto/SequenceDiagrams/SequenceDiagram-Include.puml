@@ -1,0 +1,37 @@
+@startuml
+
+actor Empresa as empresa #lightgrey
+participant "Class Vantagem" as vantagemCL #lightgrey
+database "Vantagem DB" as vantagemDB #lightgrey
+
+' Criar uma vantagem
+autonumber
+activate empresa  #lightgrey
+group while [validaDados = false]
+    empresa -> vantagemCL : newVantagem (dados);
+    activate vantagemCL  #lightgrey
+
+    vantagemCL -> vantagemCL : validaDado();
+    alt validaDado = false
+        vantagemCL -> empresa : alert("Dados vão válidos");
+    end
+end
+
+vantagemCL -> vantagemDB : findMatch();
+activate vantagemDB  #lightgrey
+vantagemDB -> vantagemCL : response
+deactivate vantagemDB
+
+alt findMatch = true
+   vantagemCL -> empresa :alert ("Vantagem já está cadastrada"); activate vantagemCL
+else
+    vantagemCL -> vantagemDB : createNovo(dados);
+    activate vantagemDB  #lightgrey
+    vantagemDB -> vantagemCL : message("itemCriado");
+    deactivate vantagemDB
+    vantagemCL -> empresa :alert ("Vantagem cadastrada com Sucesso");
+    deactivate vantagemCL
+end
+deactivate empresa
+
+@enduml

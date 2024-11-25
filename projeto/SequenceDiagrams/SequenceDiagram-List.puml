@@ -1,0 +1,26 @@
+@startuml
+
+actor Empresa as empresa #lightgrey
+participant "Class Vantagem" as vantagemCL #lightgrey
+database "Vantagem DB" as vantagemDB #lightgrey
+
+' Listar as vantagens
+autonumber
+activate empresa  #lightgrey
+empresa -> vantagemCL : listVantagens();
+activate vantagemCL  #lightgrey
+
+vantagemCL -> vantagemDB : getAll();
+activate vantagemDB  #lightgrey
+vantagemDB -> vantagemCL : response
+deactivate vantagemDB
+
+alt getAll = null
+   vantagemCL -> empresa :alert ("Ainda não existem vantagens cadastradas");
+else
+    vantagemCL -> empresa : listaVantagens[];
+    deactivate vantagemCL
+end
+deactivate empresa
+
+@enduml

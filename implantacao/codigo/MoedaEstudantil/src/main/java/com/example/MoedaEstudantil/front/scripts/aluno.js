@@ -1,5 +1,7 @@
 async function saveAluno() {
     const users = JSON.parse(localStorage.getItem("users")) || [];
+    const alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+    const i = alunos.length + 1;
 
     const id = document.getElementById('alunoId').value;
     const nome = document.getElementById('alunoNome').value;
@@ -10,7 +12,7 @@ async function saveAluno() {
     const endereco = document.getElementById('alunoEndereco').value;
     const curso = document.getElementById('alunoCurso').value;
     if (nome) {
-        const aluno = { id: id || new Date().getTime(), nome, cpf, rg, email, instituicao, endereco, curso };
+        const aluno = {id: id || i, nome: nome,cpf: cpf, rg: rg, email: email, instituicao: instituicao, endereco: endereco, curso: curso};
         const alunoList = document.getElementById('alunoList');
 
         if (id) {
@@ -19,10 +21,15 @@ async function saveAluno() {
                 existingAluno.innerHTML = `${aluno.nome} - ${aluno.cpf} - ${aluno.email} 
                             <button class="btn btn-warning btn-sm float-right ml-2" onclick="editAluno(${aluno.id})">Editar</button>
                             <button class="btn btn-danger btn-sm float-right" onclick="deleteAluno(${aluno.id}, this)">Remover</button>`;
+
+                alunos[id - 1] = {id: id, nome: nome,cpf: cpf, rg: rg, email: email, instituicao: instituicao, endereco: endereco, curso: curso};
+                localStorage.setItem("alunos", JSON.stringify(alunos));
             }
         } else {
-            const i = users.filter(item => item.startsWith("Aluno")).length + 1;
-            const newUser = "Aluno " + i;
+            alunos.push(aluno);
+            localStorage.setItem("alunos", JSON.stringify(alunos));
+
+            const newUser = "Aluno" + i;
             users.push(newUser);
             localStorage.setItem("users", JSON.stringify(users));
 
@@ -43,14 +50,15 @@ async function saveAluno() {
 }
 
 function editAluno(id) {
-    const aluno = document.querySelector(`#alunoList li[data-id='${id}']`);
-    if (aluno) {
-        const [nome, cpf, email] = aluno.textContent.split(' - ');
-        document.getElementById('alunoId').value = id;
-        document.getElementById('alunoNome').value = nome.trim();
-        document.getElementById('alunoCpf').value = cpf.trim();
-        document.getElementById('alunoEmail').value = email.trim();
-    }
+    const aluno = JSON.parse(localStorage.getItem("alunos"))[id - 1];
+    document.getElementById('alunoId').value = aluno.id;
+    document.getElementById('alunoNome').value = aluno.nome;
+    document.getElementById('alunoCpf').value = aluno.cpf;
+    document.getElementById('alunoRg').value = aluno.rg;
+    document.getElementById('alunoEmail').value = aluno.email;
+    document.getElementById('alunoInstituicao').value = aluno.instituicao;
+    document.getElementById('alunoEndereco').value = aluno.endereco;
+    document.getElementById('alunoCurso').value = aluno.curso;
 }
 
 function deleteAluno(id, element) {
@@ -59,4 +67,19 @@ function deleteAluno(id, element) {
         aluno.remove();
         delete saldos[id];
     }
+}
+
+function loadAlunos() {
+    const alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+    const alunoList = document.getElementById('alunoList');
+
+    alunos.forEach(aluno => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.setAttribute('data-id', aluno.id);
+        li.innerHTML = `${aluno.nome} - ${aluno.cpf} - ${aluno.email} 
+                        <button class="btn btn-warning btn-sm float-right ml-2" onclick="editAluno(${aluno.id})">Editar</button>
+                        <button class="btn btn-danger btn-sm float-right" onclick="deleteAluno(${aluno.id}, this)">Remover</button>`;
+        alunoList.appendChild(li);
+    })
 }

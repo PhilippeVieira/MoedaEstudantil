@@ -1,0 +1,30 @@
+@startuml
+
+actor Empresa as empresa #lightgrey
+participant "Class Vantagem" as vantagemCL #lightgrey
+database "Vantagem DB" as vantagemDB #lightgrey
+
+' Editar uma vantagem
+autonumber
+activate empresa  #lightgrey
+empresa -> vantagemCL : editVantagem (item, novosDados);
+activate vantagemCL  #lightgrey
+
+vantagemCL -> vantagemDB : findMatch();
+activate vantagemDB  #lightgrey
+vantagemDB -> vantagemCL : response
+deactivate vantagemDB
+
+alt findMatch = false
+   vantagemCL -> empresa :alert ("Vantagem não encontrada no banco de dados");
+else
+    vantagemCL -> vantagemDB : alterItem(item, novosDados);
+    activate vantagemDB  #lightgrey
+    vantagemDB -> vantagemCL : message("itemAlterado");
+    deactivate vantagemDB
+    vantagemCL -> empresa :alert ("Alterações realisadas para a vantagem");
+    deactivate vantagemCL
+end
+deactivate empresa
+
+@enduml
