@@ -53,6 +53,7 @@ function loadVantagens () {
     let user = JSON.parse(localStorage.getItem("userAtual"));
     let empresa = user.split("empresa")[1];
     const vantagemList = document.getElementById('vantagemList');
+    vantagemList.innerHTML = "";
 
     vantagens.filter(v => v.empresa === empresa).forEach(vantagem => {
         const li = document.createElement('li');

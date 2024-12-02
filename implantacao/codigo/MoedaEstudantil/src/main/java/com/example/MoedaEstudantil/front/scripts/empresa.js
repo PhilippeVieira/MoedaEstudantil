@@ -1,7 +1,7 @@
 async function saveEmpresa() {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const empresas = JSON.parse(localStorage.getItem("empresas")) || [];
-    const i = empresas.length + 1;
+    const i = empresas.length > 0 ? empresas[empresas.length - 1].id + 1 : 1;
 
     const id = document.getElementById('empresaId').value;
     const nome = document.getElementById('empresaNome').value;
@@ -41,7 +41,7 @@ async function saveEmpresa() {
 }
 
 function editEmpresa(id) {
-    const empresa = JSON.parse(localStorage.getItem("empresas"))[id-1];
+    const empresa = JSON.parse(localStorage.getItem("empresas"))[id - 1];
     document.getElementById('empresaId').value = empresa.id;
     document.getElementById('empresaNome').value = empresa.nome;
     document.getElementById('empresaCnpj').value = empresa.cnpj;
@@ -49,6 +49,12 @@ function editEmpresa(id) {
 
 function deleteEmpresa(id, element) {
     const empresa = document.querySelector(`#empresaList li[data-id='${id}']`);
+    let empresas = JSON.parse(localStorage.getItem("empresas"));
+    empresas = empresas.filter(i => i.id !== id);
+    localStorage.setItem("empresas", JSON.stringify(empresas));
+    let users = JSON.parse(localStorage.getItem("users"));
+    users = users.filter(i => i !== `Empresa${id}`);
+    localStorage.setItem("users", JSON.stringify(users));
     if (empresa) {
         empresa.remove();
     }
@@ -57,7 +63,7 @@ function deleteEmpresa(id, element) {
 function loadEmpresas() {
     const empresas = JSON.parse(localStorage.getItem("empresas")) || [];
     const empresaList = document.getElementById('empresaList');
-
+    empresaList.innerHTML = "";
     empresas.forEach(empresa => {
         const li = document.createElement('li');
         li.className = 'list-group-item';

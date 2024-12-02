@@ -1,7 +1,7 @@
 async function saveAluno() {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const alunos = JSON.parse(localStorage.getItem("alunos")) || [];
-    const i = alunos.length + 1;
+    const i = alunos.length > 0 ? alunos[alunos.length - 1].id + 1 : 1;
 
     const id = document.getElementById('alunoId').value;
     const nome = document.getElementById('alunoNome').value;
@@ -63,6 +63,12 @@ function editAluno(id) {
 
 function deleteAluno(id, element) {
     const aluno = document.querySelector(`#alunoList li[data-id='${id}']`);
+    let alunos = JSON.parse(localStorage.getItem("alunos"));
+    alunos = alunos.filter(i => i.id !== id);
+    localStorage.setItem("alunos", JSON.stringify(alunos));
+    let users = JSON.parse(localStorage.getItem("users"));
+    users = users.filter(i => i !== `Aluno${id}`);
+    localStorage.setItem("users", JSON.stringify(users));
     if (aluno) {
         aluno.remove();
         delete saldos[id];
@@ -72,7 +78,7 @@ function deleteAluno(id, element) {
 function loadAlunos() {
     const alunos = JSON.parse(localStorage.getItem("alunos")) || [];
     const alunoList = document.getElementById('alunoList');
-
+    alunoList.innerHTML = "";
     alunos.forEach(aluno => {
         const li = document.createElement('li');
         li.className = 'list-group-item';

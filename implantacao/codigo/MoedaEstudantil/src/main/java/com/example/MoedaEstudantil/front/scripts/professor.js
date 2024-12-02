@@ -1,7 +1,7 @@
 async function saveProfessor() {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const professores = JSON.parse(localStorage.getItem("professores")) || [];
-    const i = professores.length + 1;
+    const i = professores.length > 0 ? professores[professores.length - 1].id + 1 : 1;
 
     const id = document.getElementById('professorId').value;
     const nome = document.getElementById('professorNome').value;
@@ -52,6 +52,12 @@ function editProfessor(id) {
 
 function deleteProfessor(id, element) {
     const professor = document.querySelector(`#professorList li[data-id='${id}']`);
+    let professores = JSON.parse(localStorage.getItem("professores"));
+    professores = professores.filter(i => i.id !== id);
+    localStorage.setItem("professores", JSON.stringify(professores));
+    let users = JSON.parse(localStorage.getItem("users"));
+    users = users.filter(i => i !== `Professor${id}`);
+    localStorage.setItem("users", JSON.stringify(users));
     if (professor) {
         professor.remove();
         delete saldos[id];
@@ -61,7 +67,7 @@ function deleteProfessor(id, element) {
 function loadProfessores() {
     const professores = JSON.parse(localStorage.getItem("professores")) || [];
     const professorList = document.getElementById('professorList');
-
+    professorList.innerHTML = "";
     professores.forEach(professor => {
         const li = document.createElement('li');
         li.className = 'list-group-item';
